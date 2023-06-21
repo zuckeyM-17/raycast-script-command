@@ -1,0 +1,9 @@
+AllCops:
+  NewCops: enable
+  DisplayCopNames: true
+  SuggestExtensions: false
+  Exclude:
+    - 'dist/**/*'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false

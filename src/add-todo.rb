@@ -15,11 +15,11 @@ require 'uri'
 require 'time'
 require 'json'
 
-notion_api_token = "NOTION_API_TOKEN"
-daily_task_database_id = "DAILY_TASK_DATABASE_ID"
+notion_api_token = 'NOTION_API_TOKEN'
+daily_task_database_id = 'DAILY_TASK_DATABASE_ID'
 
 cat = 'Skill'
-categories = ['Skill', '家事', 'Studist', 'プライベート']
+categories = %w[Skill 家事 Studist プライベート]
 cat = ARGV[1] if categories.include?(ARGV[1])
 
 uri = URI.parse('https://api.notion.com/v1/pages')
@@ -31,12 +31,12 @@ request.body = {
   parent: { database_id: daily_task_database_id },
   properties: {
     name: {
-        title: [
-            {text: {content: ARGV[0]}}
-        ]
+      title: [
+        { text: { content: ARGV[0] } }
+      ]
     },
     start_date: {
-      date: { start: Time.now.strftime('%F')  }
+      date: { start: Time.now.strftime('%F') }
     },
     status: {
       select: { name: '今日の作業' }
@@ -48,9 +48,9 @@ request.body = {
 }.to_json
 
 req_options = {
-  use_ssl: uri.scheme == 'https',
+  use_ssl: uri.scheme == 'https'
 }
 
-response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
   http.request(request)
 end

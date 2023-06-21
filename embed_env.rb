@@ -8,8 +8,8 @@ Dir.glob('src/*.rb').each do |file|
   buffer = File.read(file)
 
   %w[NOTION_API_TOKEN DAILY_TASK_DATABASE_ID].each do |key|
-    buffer.gsub!(key, ENV[key])
+    buffer.gsub!(key, ENV.fetch(key, nil))
   end
 
-  File.open("dist/#{file_name}", "w") { |f| f.write(buffer) }
+  File.write("dist/#{file_name}", buffer)
 end
