@@ -16,7 +16,7 @@ require 'json'
 open_ai_api_key = "OPEN_AI_API_KEY"
 
 system_message = <<~SYSTEM_MESSAGE
-  Please output "Japanese meaning", "English description", "thesaurus", "phonetic symbols", and "example sentences" based on the given English word in the following format.
+  Please output "Japanese meaning", "English description", "thesaurus", "phonetic symbols", and "example sentences" based on the given English word in the following format (JSON).
 
   # Given word
 
@@ -24,13 +24,16 @@ system_message = <<~SYSTEM_MESSAGE
 
   # Output
 
-  Japanese meaning: 記述、叙述、描写
-  English description: a statement that represents something in words
-  Thesaurus: account, characterization, chronicle, depiction, description, detail
-  Phonetic symbols: dɪskrípʃən
-  Example sentences:
-  - The description of the book was accurate.
-  - The description of the book was accurate.
+  {
+    "ja": "記述、叙述、描写",
+    "description": "a statement that represents something in words",
+    "thesaurus": "account, characterization, chronicle, depiction, description, detail",
+    "phonetic_symbols": "dɪskrípʃən"
+    "examples": [
+      "the description of the event was quite different from what had actually happened.",
+      "The description of the book was accurate."
+    ]
+  }
 SYSTEM_MESSAGE
 
 user_message = ARGV[0]
@@ -55,4 +58,4 @@ response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
   http.request(request)
 end
 
-puts response.body
+puts JSON.parse(response.body)["choices"][0]["message"]["content"]
