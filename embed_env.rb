@@ -7,7 +7,7 @@ Dir.glob('src/*.rb').each do |file|
 
   buffer = File.read(file)
 
-  %w[NOTION_API_TOKEN DAILY_TASK_DATABASE_ID].each do |key|
+  %w[NOTION_API_TOKEN DAILY_TASK_DATABASE_ID OPEN_AI_API_KEY].each do |key|
     buffer.gsub!(key, ENV.fetch(key, nil))
   end
 
