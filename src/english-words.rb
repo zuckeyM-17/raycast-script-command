@@ -13,7 +13,7 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-open_ai_api_key = "OPEN_AI_API_KEY"
+open_ai_api_key = 'OPEN_AI_API_KEY'
 
 system_message = <<~SYSTEM_MESSAGE
   Based on the English word entered by the user, output the "Japanese meaning", "English description", "thesaurus", "phonetic symbols", and "example sentences" in the following format (JSON).
@@ -44,11 +44,11 @@ request = Net::HTTP::Post.new(uri)
 request.content_type = 'application/json'
 request['Authorization'] = "Bearer #{open_ai_api_key}"
 request.body = {
-  model: "gpt-3.5-turbo",
+  model: 'gpt-3.5-turbo',
   messages: [
-    { role: "system", content: system_message },
-    { role: "user", content: user_message },
-    { role: "system", content: '{ "additional_info":' },
+    { role: 'system', content: system_message },
+    { role: 'user', content: user_message },
+    { role: 'system', content: '{ "additional_info":' }
   ]
 }.to_json
 
@@ -60,7 +60,7 @@ response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
   http.request(request)
 end
 
-res = JSON.parse( '{ "additional_info":'+JSON.parse(response.body)["choices"][0]["message"]["content"])
+res = JSON.parse(format('{ "additional_info": %s', JSON.parse(response.body)['choices'][0]['message']['content']))
 
 notion_api_token = 'NOTION_API_TOKEN'
 english_words_database_id = 'ENGLISH_WORDS_DATABASE_ID'
@@ -73,18 +73,9 @@ request['Notion-Version'] = '2022-06-28'
 
 def create_content(text)
   {
-    object: "block",
-    type: "paragraph",
-    "paragraph": {
-      "rich_text": [
-        {
-          type: "text",
-          text: {
-            content: text
-          }
-        }
-      ],
-    }
+    object: 'block',
+    type: 'paragraph',
+    paragraph: { rich_text: [{ type: 'text', text: { content: text } }] }
   }
 end
 
@@ -97,17 +88,17 @@ request.body = {
       ]
     },
     ja: {
-      rich_text: [ { text: { content: res['ja'] } } ]
+      rich_text: [{ text: { content: res['ja'] } }]
     },
     sym: {
-      rich_text: [ { text: { content: res['phonetic_symbols'] } } ]
-    },
+      rich_text: [{ text: { content: res['phonetic_symbols'] } }]
+    }
   },
   children: [
     create_content(res['description']),
     create_content('## thesaurus'),
     create_content(res['thesaurus']),
-    create_content('## examples'),
+    create_content('## examples')
   ].concat(res['examples'].map { |e| create_content(e) })
 }.to_json
 
@@ -115,6 +106,6 @@ req_options = {
   use_ssl: uri.scheme == 'https'
 }
 
-response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
   http.request(request)
 end
