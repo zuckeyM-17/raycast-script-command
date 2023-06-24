@@ -52,9 +52,7 @@ request.body = {
   ]
 }.to_json
 
-req_options = {
-  use_ssl: uri.scheme == 'https'
-}
+req_options = { use_ssl: uri.scheme == 'https' }
 
 response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
   http.request(request)
@@ -73,8 +71,7 @@ request['Notion-Version'] = '2022-06-28'
 
 def create_content(text)
   {
-    object: 'block',
-    type: 'paragraph',
+    object: 'block', type: 'paragraph',
     paragraph: { rich_text: [{ type: 'text', text: { content: text } }] }
   }
 end
@@ -82,17 +79,9 @@ end
 request.body = {
   parent: { database_id: english_words_database_id },
   properties: {
-    en: {
-      title: [
-        { text: { content: ARGV[0] } }
-      ]
-    },
-    ja: {
-      rich_text: [{ text: { content: res['ja'] } }]
-    },
-    sym: {
-      rich_text: [{ text: { content: res['phonetic_symbols'] } }]
-    }
+    en: { title: [{ text: { content: ARGV[0] } }] },
+    ja: { rich_text: [{ text: { content: res['ja'] } }] },
+    sym: { rich_text: [{ text: { content: res['phonetic_symbols'] } }] }
   },
   children: [
     create_content(res['description']),
@@ -102,9 +91,7 @@ request.body = {
   ].concat(res['examples'].map { |e| create_content(e) })
 }.to_json
 
-req_options = {
-  use_ssl: uri.scheme == 'https'
-}
+req_options = { use_ssl: uri.scheme == 'https' }
 
 Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
   http.request(request)
