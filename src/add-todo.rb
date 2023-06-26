@@ -39,7 +39,7 @@ request.body = {
       date: { start: Time.now.strftime('%F') }
     },
     status: {
-      select: { name: '今日の作業' }
+      select: { name: '新規' }
     },
     category: {
       select: { name: cat }
