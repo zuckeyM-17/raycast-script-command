@@ -70,10 +70,7 @@ request['Authorization'] = "Bearer #{notion_api_token}"
 request['Notion-Version'] = '2022-06-28'
 
 def create_content(text)
-  {
-    object: 'block', type: 'paragraph',
-    paragraph: { rich_text: [{ type: 'text', text: { content: text } }] }
-  }
+  { object: 'block', type: 'paragraph', paragraph: { rich_text: [{ type: 'text', text: { content: text } }] } }
 end
 
 request.body = {
