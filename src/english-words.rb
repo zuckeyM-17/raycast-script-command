@@ -44,7 +44,7 @@ request = Net::HTTP::Post.new(uri)
 request.content_type = 'application/json'
 request['Authorization'] = "Bearer #{open_ai_api_key}"
 request.body = {
-  model: 'gpt-3.5-turbo',
+  model: 'gpt-4',
   messages: [
     { role: 'system', content: system_message },
     { role: 'user', content: user_message },
